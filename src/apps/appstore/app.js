@@ -7,41 +7,11 @@ define(function(require) {
 
 	var app = {
 
-		name: 'appstore',
-
-		isMasqueradable: false,
-
-		css: [ 'app' ],
-
 		i18n: {
 			'de-DE': { customCss: false },
 			'en-US': { customCss: false },
 			'fr-FR': { customCss: false },
 			'ru-RU': { customCss: false }
-		},
-
-		requests: {
-		},
-
-		subscribe: {
-
-		},
-
-		load: function(callback) {
-			var self = this;
-
-			self.initApp(function() {
-				callback && callback(self);
-			});
-		},
-
-		initApp: function(callback) {
-			var self = this;
-
-			monster.pub('auth.initApp', {
-				app: self,
-				callback: callback
-			});
 		},
 
 		render: function(container) {
@@ -108,23 +78,16 @@ define(function(require) {
 		},
 
 		loadData: function(callback) {
-			var self = this,
-				isAppInstalled = function(app) {
-					return _.get(app, 'allowed_users', 'specific') !== 'specific'
-						|| !_.isEmpty(_.get(app, 'users', []));
-				};
+			var self = this;
 
 			monster.parallel({
 				apps: function(next) {
-					next(null, _.map(monster.util.listAppStoreMetadata(), function(app) {
-						return _.assign({}, app, {
-							tags: _
-								.chain(app)
-								.get('tags', [])
-								.concat(isAppInstalled(app) ? ['installed'] : [])
-								.value()
-						});
-					}));
+					monster.pub('apploader.getAppList', {
+						accountId: self.accountId,
+						scope: 'all',
+						success: _.partial(next, null),
+						error: next
+					});
 				},
 				users: function(next) {
 					self.callApi({
@@ -146,10 +109,18 @@ define(function(require) {
 		renderApps: function(parent, appstoreData) {
 			var self = this,
 				appList = appstoreData.apps,
+				isAppInstalled = function(app) {
+					return _.get(app, 'allowed_users', 'specific') !== 'specific'
+						|| !_.isEmpty(_.get(app, 'users', []));
+				},
 				template = $(self.getTemplate({
 					name: 'appList',
 					data: {
-						apps: appList
+						apps: _.map(appList, function(app) {
+							return _.merge({
+								isInstalled: isAppInstalled(app)
+							}, app);
+						})
 					}
 				}));
 
@@ -172,7 +143,7 @@ define(function(require) {
 
 		showAppPopup: function(appId, appstoreData) {
 			var self = this,
-				metadata = monster.util.getAppStoreMetadata(appId),
+				metadata = _.find(appstoreData.apps, { id: appId }),
 				userList = $.extend(true, [], appstoreData.users),
 				app = _.merge({
 					extra: _.merge({
@@ -231,7 +202,7 @@ define(function(require) {
 						}));
 			}
 
-			self.bindPopupEvents(template, app, isActive);
+			self.bindPopupEvents(template, app, isActive, appstoreData.apps);
 
 			rightContainer.find('.selected-users-number').html(selectedUsersLength);
 			rightContainer.find('.total-users-number').html(users.length);
@@ -241,7 +212,7 @@ define(function(require) {
 			template.find('#screenshot_carousel').carousel();
 		},
 
-		bindPopupEvents: function(parent, app, isActive) {
+		bindPopupEvents: function(parent, app, isActive, apps) {
 			var self = this,
 				userList = parent.find('.user-list'),
 				updateAppInstallInfo = function(appInstallInfo, successCallback, errorCallback) {
@@ -255,6 +226,16 @@ define(function(require) {
 							data: appInstallInfo
 						},
 						success: function(data, status) {
+							var storedApp = _.find(apps, { id: app.id });
+
+							if (_.includes(apiResource, 'delete')) {
+								_.forEach(['allowed_users', 'users'], _.partial(_.unset, storedApp));
+							} else {
+								_.assign(storedApp, _.pick(data.data, [
+									'allowed_users',
+									'users'
+								]));
+							}
 							successCallback && successCallback();
 						},
 						error: function(_data, status) {
@@ -386,10 +367,16 @@ define(function(require) {
 
 			parent.find('#appstore_popup_save').on('click', function() {
 				var $button = $(this),
+					toObjectWithProp = function(prop) {
+						return function(value) {
+							return _.set({}, prop, value);
+						};
+					},
 					isEnabled = parent.find('#app_switch').is(':checked'),
 					allowedUsers = parent.find('.permissions-bloc input[name="permissions"]:checked').val(),
-					selectedUsers = monster.ui.getFormData('app_popup_user_list_form').users || [],
-					areNoSelectedUsers = allowedUsers === 'specific' && _.isEmpty(selectedUsers);
+					isUsersSpecific = allowedUsers === 'specific',
+					selectedUserIds = isUsersSpecific ? monster.ui.getFormData('app_popup_user_list_form').users : [],
+					areNoSelectedUsers = isUsersSpecific && _.isEmpty(selectedUserIds);
 
 				if (isEnabled && areNoSelectedUsers) {
 					return monster.ui.alert(self.i18n.active().alerts.noUserSelected);
@@ -399,7 +386,7 @@ define(function(require) {
 
 				updateAppInstallInfo(isEnabled ? {
 					allowed_users: allowedUsers,
-					users: allowedUsers === 'specific' ? _.map(selectedUsers, _.partial(_.set, {}, 'id')) : []
+					users: _.map(selectedUserIds, toObjectWithProp('id'))
 				} : {}, function() {
 					parent.closest(':ui-dialog').dialog('close');
 					$('#appstore_container .app-element[data-id="' + app.id + '"]').toggleClass('installed', isEnabled);

@@ -8,8 +8,7 @@ The JavaScript framework to leverage the power of [Kazoo](https://2600hz.org/).
 
 ### Prerequisites
 
-* [node](https://nodejs.org/en/download/) >= 6.9.0
-* [npm](https://docs.npmjs.com/getting-started/installing-node) >= 3.10.6
+* [node](https://nodejs.org/en/download/) >= 12 & [npm](https://docs.npmjs.com/getting-started/installing-node)
 * [gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md) >= 4.0.0
 
 ### Install
@@ -131,3 +130,4 @@ This project is licensed under the Mozilla Public License - see the [LICENSE](LI
 [selenium-ide_cli]: https://www.seleniumhq.org/selenium-ide/docs/en/introduction/command-line-runner/
 [selenium-ide_install]: https://www.seleniumhq.org/selenium-ide/docs/en/introduction/getting-started/#installation
 [selenium-ide_play]: https://www.seleniumhq.org/selenium-ide/docs/en/introduction/getting-started/#in-browser
+

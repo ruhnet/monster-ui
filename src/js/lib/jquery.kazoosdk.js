@@ -94,6 +94,10 @@
 				'listByInteraction': { verb: 'GET', url: 'accounts/{accountId}/cdrs/interaction' },
 				'listLegs': { verb: 'GET', url: 'accounts/{accountId}/cdrs/legs/{callId}' }
 			},
+			cdrPushOnebill: {
+				'get': { verb: 'GET', url: 'accounts/{accountId}/cdr_push_onebill' },
+				'post': { verb: 'POST', url: 'accounts/{accountId}/cdr_push_onebill' }
+			},
 			channel: {
 				'list': { verb: 'GET', url: 'accounts/{accountId}/channels' },
 				'action': { verb: 'PUT', url: 'accounts/{accountId}/channels/{callId}', removeMetadataAPI: true }
@@ -130,7 +134,7 @@
 				'getIntegration': { verb: 'GET', url: 'accounts/{accountId}/crm_integration' },
 				'createIntegration': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration' },
 				'getTrigger': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/triggers/{triggerId}' },
-				'listTriggers': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/triggers'},
+				'listTriggers': { verb: 'GET', url: 'accounts/{accountId}/crm_integration/triggers' },
 				'createTrigger': { verb: 'PUT', url: 'accounts/{accountId}/crm_integration/triggers' },
 				'updateTrigger': { verb: 'POST', url: 'accounts/{accountId}/crm_integration/triggers/{triggerId}' },
 				'patchTrigger': { verb: 'PATCH', url: 'accounts/{accountId}/crm_integration/triggers/{triggerId}' },
@@ -174,6 +178,14 @@
 				'update': { verb: 'POST', url: 'accounts/{accountId}/directories/{directoryId}' },
 				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/directories/{directoryId}' },
 				'list': { verb: 'GET', url: 'accounts/{accountId}/directories' }
+			},
+			externalNumbers: {
+				get: { verb: 'GET', url: 'accounts/{accountId}/external_numbers/{numberId}' },
+				create: { verb: 'PUT', url: 'accounts/{accountId}/external_numbers' },
+				'delete': { verb: 'DELETE', url: 'accounts/{accountId}/external_numbers/{numberId}' },
+				list: { verb: 'GET', url: 'accounts/{accountId}/external_numbers' },
+				verify: { verb: 'PUT', url: 'accounts/{accountId}/external_numbers/{numberId}/verify' },
+				submitPin: { verb: 'POST', url: 'accounts/{accountId}/external_numbers/{numberId}/verify' }
 			},
 			faxbox: {
 				'get': { verb: 'GET', url: 'accounts/{accountId}/faxboxes/{faxboxId}' },
@@ -343,6 +355,7 @@
 				'listLastSubmitted': { verb: 'GET', url: 'accounts/{accountId}/port_requests/last_submitted' },
 				'searchNumber': { verb: 'GET', url: 'accounts/{accountId}/port_requests?by_number={number}' },
 				'searchNumberByDescendants': { verb: 'GET', url: 'accounts/{accountId}/descendants/port_requests?by_number={number}' },
+				'portabilityLookup': { verb: 'POST', url: 'accounts/{accountId}/port_requests/lnp_lookup' },
 				'listPortAuthority': { verb: 'GET', url: 'port_requests' }
 			},
 			presence: {
