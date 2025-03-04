@@ -22,6 +22,10 @@ const libsToExcludeFromWhole = [
 const libsToExcludeFromApp = [
 	'async',
 	'bootstrap',
+	'braintree-client',
+	'braintree-hosted-fields',
+	'braintree-us-bank-account',
+	'braintree-vault-manager',
 	'card',
 	'chart',
 	'chosen',

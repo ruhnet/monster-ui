@@ -393,6 +393,7 @@
 			"sip_uri": "SIP URI",
 			"smartphone": "Smartphone",
 			"softphone": "Softphone",
+			"teammate": "TeamMate",
 			"outbound_trunks": "Outbound Trunks",
 			"inbound_trunks": "Inbound Trunks",
 			"twoway_trunks": "Twoway Trunks",
@@ -723,6 +724,7 @@
 		"postalCode": "Zip Code",
 		"rotatedText": "For emergency services",
 		"state": "State",
+		"country": "Country",
 		"successE911": "You successfully updated the e911 information of <br> {{phoneNumber}}",
 		"title": "E911 Information",
 		"verifyLocation": "Verify Location",
@@ -734,6 +736,12 @@
 			"youEntered": "You entered:",
 			"choicesAvailable": "Choices available:",
 			"content": "Several addresses matched the information you provided. Perhaps you didn't enter a street number or the building has multiple units."
+		},
+		"countries": {
+			"us": {
+				"value": "US",
+				"option": "United States"
+			}
 		}
 	},
 
@@ -865,6 +873,7 @@
 			"sip_uri": "SIP URI",
 			"smartphone": "Smartphone",
 			"softphone": "Softphone",
+			"teammate": "TeamMate",
 			"outbound_trunks": "Outbound Trunks",
 			"inbound_trunks": "Inbound Trunks",
 			"twoway_trunks": "Twoway Trunks",
@@ -950,6 +959,7 @@
 		"removeLink": "Remove",
 		"spareLink": "Select a spare number",
 		"externalLink": "Select a caller ID",
+		"assignedLink": "Select a number in use",
 		"buyLink": "Buy a new number",
 		"__comment": "UI-2334: adding extension selector to common control",
 		"__version": "v4.0",

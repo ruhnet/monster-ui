@@ -200,6 +200,7 @@ define(function(require) {
 				formattedData.isShoutcast = true;
 				formattedData.shoutcastValue = formattedData.selectedOption;
 				formattedData.selectedOption = 'shoutcast';
+				formattedData.mediaId = 'shoutcast';
 			};
 
 			return formattedData;
@@ -269,6 +270,7 @@ define(function(require) {
 		mediaSelectGetValue: function(template, args) {
 			var self = this,
 				ttsTab = template.find('.monster-tab-content.monster-tab-content-tts.active'),
+				skin = args.hasOwnProperty('skin') ? args.skin : 'default',
 				callback = args.callback,
 				response;
 
@@ -295,7 +297,7 @@ define(function(require) {
 					response = val;
 				}
 
-				if (args.selectedMedia.media_source === 'tts' && !ttsTab.length) {
+				if (skin === 'tabs' && args.selectedMedia.media_source === 'tts' && !ttsTab.length) {
 					self.deleteTTSMedia(args.selectedMedia.id);
 				}
 			} else {
